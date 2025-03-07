@@ -14,6 +14,19 @@ type EnergyConsumptionProps = {
   prevStep: () => void;
 };
 
+// Define default power values for common appliances
+const appliancePowerMap: Record<string, number> = {
+  "AC": 1500,
+  "Fridge": 300,
+  "TV": 150,
+  "LED Bulb": 10,
+  "Fan": 80,
+  "Microwave": 1200,
+  "Water Pump": 750,
+  "Computer": 200,
+  "Other": 0
+};
+
 const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: EnergyConsumptionProps) => {
   const [appliances, setAppliances] = useState<Appliance[]>(
     formData.appliances?.length ? formData.appliances : [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }]
@@ -27,11 +40,18 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
 
   const handleApplianceChange = (index: number, field: keyof Appliance, value: string | number) => {
     const updatedAppliances = [...appliances];
+    
     if (field === 'name') {
       updatedAppliances[index][field] = value as string;
+      
+      // Automatically set the power value based on the selected appliance
+      if (value in appliancePowerMap) {
+        updatedAppliances[index].power = appliancePowerMap[value as string];
+      }
     } else {
       updatedAppliances[index][field] = Number(value) || 0;
     }
+    
     setAppliances(updatedAppliances);
     updateFormData({ appliances: updatedAppliances });
   };
