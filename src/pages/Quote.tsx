@@ -16,6 +16,16 @@ const Quote = () => {
   const [formData, setFormData] = useState<FormData>(defaultFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Define the steps for the StepIndicator
+  const steps = [
+    "Customer Details",
+    "Energy Consumption",
+    "Backup Requirements",
+    "Preferences",
+    "Site Details",
+    "Review & Submit"
+  ];
+
   const nextStep = () => {
     if (currentStep < 7) {
       setCurrentStep(currentStep + 1);
@@ -30,7 +40,7 @@ const Quote = () => {
     }
   };
 
-  const updateFormData = (step: number, data: Partial<FormData>) => {
+  const updateFormData = (data: Partial<FormData>) => {
     setFormData({ ...formData, ...data });
   };
 
@@ -41,6 +51,12 @@ const Quote = () => {
     setCurrentStep(7); // Move to Thank You step
   };
 
+  const resetForm = () => {
+    setFormData(defaultFormData);
+    setCurrentStep(1);
+    setIsSubmitted(false);
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -48,7 +64,7 @@ const Quote = () => {
           Solar Quote Request
         </h1>
         
-        <StepIndicator currentStep={currentStep} />
+        <StepIndicator steps={steps} currentStep={currentStep - 1} />
         
         <Card className="mt-8">
           <CardContent className="pt-6">
@@ -57,7 +73,7 @@ const Quote = () => {
                 {currentStep === 1 && (
                   <CustomerDetails 
                     formData={formData} 
-                    updateFormData={(data) => updateFormData(1, data)} 
+                    updateFormData={updateFormData} 
                     nextStep={nextStep} 
                   />
                 )}
@@ -65,7 +81,7 @@ const Quote = () => {
                 {currentStep === 2 && (
                   <EnergyConsumption 
                     formData={formData} 
-                    updateFormData={(data) => updateFormData(2, data)} 
+                    updateFormData={updateFormData} 
                     nextStep={nextStep} 
                     prevStep={prevStep} 
                   />
@@ -74,7 +90,7 @@ const Quote = () => {
                 {currentStep === 3 && (
                   <BackupRequirements 
                     formData={formData} 
-                    updateFormData={(data) => updateFormData(3, data)} 
+                    updateFormData={updateFormData} 
                     nextStep={nextStep} 
                     prevStep={prevStep} 
                   />
@@ -83,7 +99,7 @@ const Quote = () => {
                 {currentStep === 4 && (
                   <SystemPreferences 
                     formData={formData} 
-                    updateFormData={(data) => updateFormData(4, data)} 
+                    updateFormData={updateFormData} 
                     nextStep={nextStep} 
                     prevStep={prevStep} 
                   />
@@ -92,7 +108,7 @@ const Quote = () => {
                 {currentStep === 5 && (
                   <SiteDetails 
                     formData={formData} 
-                    updateFormData={(data) => updateFormData(5, data)} 
+                    updateFormData={updateFormData} 
                     nextStep={nextStep} 
                     prevStep={prevStep} 
                   />
@@ -100,10 +116,9 @@ const Quote = () => {
                 
                 {currentStep === 6 && (
                   <Submission 
-                    formData={formData} 
-                    updateFormData={(data) => updateFormData(6, data)} 
-                    prevStep={prevStep} 
-                    handleSubmit={handleSubmit}
+                    formData={formData}
+                    prevStep={prevStep}
+                    resetForm={resetForm}
                   />
                 )}
               </>

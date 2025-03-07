@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -6,29 +5,18 @@ import { Input } from "@/components/ui/input";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Zap } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-type ApplianceInput = {
-  name: string;
-  quantity: number;
-  power: number;
-  hours: number;
-};
+import { Appliance, FormData } from "@/types/quote";
 
 type EnergyConsumptionProps = {
-  formData: {
-    gridSupplyHours: string;
-    tariffRate: string;
-    monthlyBill: string;
-    appliances: ApplianceInput[];
-  };
-  updateFormData: (data: any) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
   nextStep: () => void;
   prevStep: () => void;
 };
 
 const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: EnergyConsumptionProps) => {
-  const [appliances, setAppliances] = useState<ApplianceInput[]>(
-    formData.appliances?.length ? formData.appliances : [{ name: "", quantity: 1, power: 0, hours: 0 }]
+  const [appliances, setAppliances] = useState<Appliance[]>(
+    formData.appliances?.length ? formData.appliances : [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }]
   );
   
   const [errors, setErrors] = useState<{
@@ -37,7 +25,7 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
     appliances?: string;
   }>({});
 
-  const handleApplianceChange = (index: number, field: keyof ApplianceInput, value: string | number) => {
+  const handleApplianceChange = (index: number, field: keyof Appliance, value: string | number) => {
     const updatedAppliances = [...appliances];
     if (field === 'name') {
       updatedAppliances[index][field] = value as string;
@@ -49,7 +37,7 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
   };
 
   const addAppliance = () => {
-    const updatedAppliances = [...appliances, { name: "", quantity: 1, power: 0, hours: 0 }];
+    const updatedAppliances = [...appliances, { name: "", quantity: 1, power: 0, hoursUsed: 0 }];
     setAppliances(updatedAppliances);
     updateFormData({ appliances: updatedAppliances });
   };
@@ -79,7 +67,7 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
     
     // Check if at least one appliance has complete information
     const hasCompleteAppliance = appliances.some(app => 
-      app.name && app.quantity > 0 && app.power > 0 && app.hours > 0
+      app.name && app.quantity > 0 && app.power > 0 && app.hoursUsed > 0
     );
     
     if (!hasCompleteAppliance) {
@@ -253,8 +241,8 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
                     min="0"
                     max="24"
                     placeholder="Hours"
-                    value={appliance.hours || ''}
-                    onChange={(e) => handleApplianceChange(index, 'hours', e.target.value)}
+                    value={appliance.hoursUsed || ''}
+                    onChange={(e) => handleApplianceChange(index, 'hoursUsed', e.target.value)}
                   />
                 </div>
                 {appliances.length > 1 && (

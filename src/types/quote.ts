@@ -11,7 +11,7 @@ export type FormData = {
   fullName: string;
   email: string;
   phone: string;
-  location: string;
+  state: string; // Changed from location to state to match component
   propertyType: string;
   energySources: string[];
   generatorCapacity?: string;
@@ -27,6 +27,7 @@ export type FormData = {
   // Backup Requirements
   criticalAppliances: string[];
   otherCriticalAppliance?: string;
+  otherAppliances: string; // Added to match BackupRequirements component
   backupDuration: string;
   outageFrequency: string;
   
@@ -38,7 +39,7 @@ export type FormData = {
   
   // Site Details
   roofType: string;
-  otherRoofType?: string;
+  otherRoofType: string; // Changed from optional to required to match SiteDetails
   shading: string;
   availableSpace: string;
   photos: File[];
@@ -61,7 +62,7 @@ export const defaultFormData: FormData = {
   fullName: "",
   email: "",
   phone: "",
-  location: "",
+  state: "", // Changed from location to state
   propertyType: "",
   energySources: [],
   gridSupplyHours: "",
@@ -69,6 +70,7 @@ export const defaultFormData: FormData = {
   monthlyBill: "",
   appliances: [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }],
   criticalAppliances: [],
+  otherAppliances: "", // Added to match component
   backupDuration: "",
   outageFrequency: "",
   budgetRange: "",
@@ -76,6 +78,7 @@ export const defaultFormData: FormData = {
   financing: "",
   aestheticNeeds: [],
   roofType: "",
+  otherRoofType: "", // Added as required field
   shading: "",
   availableSpace: "",
   photos: [],

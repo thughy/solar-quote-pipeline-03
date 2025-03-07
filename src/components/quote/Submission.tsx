@@ -5,9 +5,10 @@ import { FormEvent, useState } from "react";
 import { ArrowLeft, Check, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { FormData } from "@/types/quote";
 
 type SubmissionProps = {
-  formData: any;
+  formData: FormData;
   prevStep: () => void;
   resetForm: () => void;
 };
