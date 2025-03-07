@@ -12,6 +12,7 @@ type SiteDetailsProps = {
     shading: string;
     availableSpace: string;
     otherRoofType: string;
+    roofOrientation?: string; // Add the new field
   };
   updateFormData: (data: any) => void;
   nextStep: () => void;
@@ -23,6 +24,7 @@ const SiteDetails = ({ formData, updateFormData, nextStep, prevStep }: SiteDetai
     roofType?: string;
     shading?: string;
     availableSpace?: string;
+    roofOrientation?: string; // Add validation for new field
   }>({});
 
   const validateForm = () => {
@@ -30,6 +32,7 @@ const SiteDetails = ({ formData, updateFormData, nextStep, prevStep }: SiteDetai
       roofType?: string;
       shading?: string;
       availableSpace?: string;
+      roofOrientation?: string; // Add validation for new field
     } = {};
     
     if (!formData.roofType) {
@@ -98,6 +101,34 @@ const SiteDetails = ({ formData, updateFormData, nextStep, prevStep }: SiteDetai
             />
           )}
           {errors.roofType && <p className="text-red-500 text-sm mt-1">{errors.roofType}</p>}
+        </div>
+
+        {/* Add new roof orientation field */}
+        <div>
+          <Label>Roof Orientation</Label>
+          <RadioGroup
+            value={formData.roofOrientation || ''}
+            onValueChange={(value) => updateFormData({ roofOrientation: value })}
+            className="flex flex-col space-y-2 mt-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="north" id="orientation-north" />
+              <Label htmlFor="orientation-north" className="cursor-pointer">North-Facing</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="south" id="orientation-south" />
+              <Label htmlFor="orientation-south" className="cursor-pointer">South-Facing</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="east-west" id="orientation-east-west" />
+              <Label htmlFor="orientation-east-west" className="cursor-pointer">East/West-Facing</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="not-sure" id="orientation-not-sure" />
+              <Label htmlFor="orientation-not-sure" className="cursor-pointer">Not Sure</Label>
+            </div>
+          </RadioGroup>
+          {errors.roofOrientation && <p className="text-red-500 text-sm mt-1">{errors.roofOrientation}</p>}
         </div>
 
         <div>

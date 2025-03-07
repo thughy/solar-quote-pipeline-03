@@ -40,6 +40,7 @@ export type FormData = {
   // Site Details
   roofType: string;
   otherRoofType: string; // Changed from optional to required to match SiteDetails
+  roofOrientation: string; // Added new field for roof orientation
   shading: string;
   availableSpace: string;
   photos: File[];
@@ -79,6 +80,7 @@ export const defaultFormData: FormData = {
   aestheticNeeds: [],
   roofType: "",
   otherRoofType: "", // Added as required field
+  roofOrientation: "", // Added default value for new field
   shading: "",
   availableSpace: "",
   photos: [],
