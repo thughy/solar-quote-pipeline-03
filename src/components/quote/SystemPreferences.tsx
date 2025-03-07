@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, PanelTop } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type SystemPreferencesProps = {
   formData: {
@@ -11,6 +12,9 @@ type SystemPreferencesProps = {
     batteryPreference: string;
     financing: string;
     aestheticNeeds: string[];
+    seasonalChange?: string;
+    inverterEfficiency?: string;
+    batteryEfficiency?: string;
   };
   updateFormData: (data: any) => void;
   nextStep: () => void;
@@ -78,6 +82,7 @@ const SystemPreferences = ({ formData, updateFormData, nextStep, prevStep }: Sys
       </div>
 
       <div className="space-y-6">
+        {/* Budget Range section */}
         <div>
           <Label>Budget Range</Label>
           <RadioGroup
@@ -101,6 +106,7 @@ const SystemPreferences = ({ formData, updateFormData, nextStep, prevStep }: Sys
           {errors.budgetRange && <p className="text-red-500 text-sm mt-1">{errors.budgetRange}</p>}
         </div>
 
+        {/* Battery Preference section */}
         <div>
           <Label>Battery Preference</Label>
           <RadioGroup
@@ -124,6 +130,7 @@ const SystemPreferences = ({ formData, updateFormData, nextStep, prevStep }: Sys
           {errors.batteryPreference && <p className="text-red-500 text-sm mt-1">{errors.batteryPreference}</p>}
         </div>
 
+        {/* Financing section */}
         <div>
           <Label>Financing</Label>
           <RadioGroup
@@ -147,6 +154,7 @@ const SystemPreferences = ({ formData, updateFormData, nextStep, prevStep }: Sys
           {errors.financing && <p className="text-red-500 text-sm mt-1">{errors.financing}</p>}
         </div>
 
+        {/* Aesthetic Needs section */}
         <div>
           <Label>Aesthetic Needs</Label>
           <div className="flex flex-col space-y-2 mt-2">
@@ -182,6 +190,60 @@ const SystemPreferences = ({ formData, updateFormData, nextStep, prevStep }: Sys
             </div>
           </div>
         </div>
+
+        {/* Seasonal Changes - NEW */}
+        <div>
+          <Label>Does your energy usage change significantly between rainy/dry seasons?</Label>
+          <RadioGroup
+            value={formData.seasonalChange || ''}
+            onValueChange={(value) => updateFormData({ seasonalChange: value })}
+            className="flex flex-col space-y-2 mt-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="yes" id="seasonal-yes" />
+              <Label htmlFor="seasonal-yes" className="cursor-pointer">Yes</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="no" id="seasonal-no" />
+              <Label htmlFor="seasonal-no" className="cursor-pointer">No</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* System Efficiency Preferences - NEW */}
+        <div>
+          <Label>Inverter Efficiency Preference</Label>
+          <Select
+            value={formData.inverterEfficiency || ''}
+            onValueChange={(value) => updateFormData({ inverterEfficiency: value })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Select inverter efficiency" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="90">Standard (90%)</SelectItem>
+              <SelectItem value="95">Premium (95%)</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label>Battery Round-Trip Efficiency</Label>
+          <Select
+            value={formData.batteryEfficiency || ''}
+            onValueChange={(value) => updateFormData({ batteryEfficiency: value })}
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Select battery efficiency" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="lithium">Lithium-Ion (95%)</SelectItem>
+              <SelectItem value="lead-acid">Lead-Acid (80%)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
       </div>
 
       <div className="pt-4 flex justify-between">

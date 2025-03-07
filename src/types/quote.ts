@@ -4,6 +4,8 @@ export type Appliance = {
   quantity: number;
   power: number;
   hoursUsed: number;
+  usageTiming?: string; // Added for day/night usage tracking
+  peakPower?: number; // Added for motor-driven appliances
 };
 
 export type FormData = {
@@ -11,7 +13,7 @@ export type FormData = {
   fullName: string;
   email: string;
   phone: string;
-  state: string; // Changed from location to state to match component
+  state: string; 
   propertyType: string;
   energySources: string[];
   generatorCapacity?: string;
@@ -23,11 +25,12 @@ export type FormData = {
   tariffRate: string;
   monthlyBill: string;
   appliances: Appliance[];
+  exactMonthlyUsage?: string; // Added for exact kWh usage if known
   
   // Backup Requirements
   criticalAppliances: string[];
   otherCriticalAppliance?: string;
-  otherAppliances: string; // Added to match BackupRequirements component
+  otherAppliances: string;
   backupDuration: string;
   outageFrequency: string;
   
@@ -39,11 +42,16 @@ export type FormData = {
   
   // Site Details
   roofType: string;
-  otherRoofType: string; // Changed from optional to required to match SiteDetails
-  roofOrientation: string; // Added new field for roof orientation
+  otherRoofType: string;
+  roofOrientation: string;
   shading: string;
   availableSpace: string;
   photos: File[];
+  
+  // Seasonal & Efficiency Factors
+  seasonalChange?: string; // Added for seasonal usage changes
+  inverterEfficiency?: string; // Added for inverter efficiency preference
+  batteryEfficiency?: string; // Added for battery efficiency preference
   
   // Submission
   agreeToFollowUp: boolean;
@@ -63,7 +71,7 @@ export const defaultFormData: FormData = {
   fullName: "",
   email: "",
   phone: "",
-  state: "", // Changed from location to state
+  state: "",
   propertyType: "",
   energySources: [],
   gridSupplyHours: "",
@@ -71,7 +79,7 @@ export const defaultFormData: FormData = {
   monthlyBill: "",
   appliances: [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }],
   criticalAppliances: [],
-  otherAppliances: "", // Added to match component
+  otherAppliances: "",
   backupDuration: "",
   outageFrequency: "",
   budgetRange: "",
@@ -79,8 +87,8 @@ export const defaultFormData: FormData = {
   financing: "",
   aestheticNeeds: [],
   roofType: "",
-  otherRoofType: "", // Added as required field
-  roofOrientation: "", // Added default value for new field
+  otherRoofType: "",
+  roofOrientation: "",
   shading: "",
   availableSpace: "",
   photos: [],
