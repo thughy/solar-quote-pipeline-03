@@ -1,12 +1,13 @@
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Zap } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Appliance, FormData } from "@/types/quote";
+import { FormData } from "@/types/quote";
+import { GridSupplySection } from "./GridSupplySection";
+import { TariffRateSection } from "./TariffRateSection";
+import { MonthlyBillSection } from "./MonthlyBillSection";
+import { MonthlyUsageSection } from "./MonthlyUsageSection";
+import { ApplianceListSection } from "./ApplianceListSection";
 
 type EnergyConsumptionProps = {
   formData: FormData;
@@ -15,79 +16,12 @@ type EnergyConsumptionProps = {
   prevStep: () => void;
 };
 
-// Define default power values for common appliances
-const appliancePowerMap: Record<string, number> = {
-  "AC": 1500,
-  "Fridge": 300,
-  "TV": 150,
-  "LED Bulb": 10,
-  "Fan": 80,
-  "Microwave": 1200,
-  "Water Pump": 750,
-  "Computer": 200,
-  "Other": 0
-};
-
-// Define peak power multipliers for motor-driven appliances
-const peakPowerMultiplier: Record<string, number> = {
-  "AC": 3, // AC compressor has high startup current
-  "Fridge": 3, // Fridge compressor has high startup current
-  "Water Pump": 3, // Water pumps have high startup current
-  "Other": 1 // Default no multiplier
-};
-
 const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: EnergyConsumptionProps) => {
-  const [appliances, setAppliances] = useState<Appliance[]>(
-    formData.appliances?.length ? formData.appliances : [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }]
-  );
-  
   const [errors, setErrors] = useState<{
     gridSupplyHours?: string;
     monthlyBill?: string;
     appliances?: string;
   }>({});
-
-  const handleApplianceChange = (index: number, field: keyof Appliance, value: string | number) => {
-    const updatedAppliances = [...appliances];
-    
-    if (field === 'name') {
-      updatedAppliances[index][field] = value as string;
-      
-      // Automatically set the power value based on the selected appliance
-      if (value in appliancePowerMap) {
-        const applianceName = value as string;
-        updatedAppliances[index].power = appliancePowerMap[applianceName];
-        
-        // Calculate and set peak power for motor-driven appliances
-        if (applianceName in peakPowerMultiplier) {
-          updatedAppliances[index].peakPower = appliancePowerMap[applianceName] * peakPowerMultiplier[applianceName];
-        }
-      }
-    } else if (field === 'quantity' || field === 'power' || field === 'hoursUsed' || field === 'peakPower') {
-      // Explicitly cast these numeric fields
-      updatedAppliances[index][field] = Number(value) || 0;
-    } else if (field === 'usageTiming') {
-      // Handle string field
-      updatedAppliances[index][field] = value as string;
-    }
-    
-    setAppliances(updatedAppliances);
-    updateFormData({ appliances: updatedAppliances });
-  };
-
-  const addAppliance = () => {
-    const updatedAppliances = [...appliances, { name: "", quantity: 1, power: 0, hoursUsed: 0 }];
-    setAppliances(updatedAppliances);
-    updateFormData({ appliances: updatedAppliances });
-  };
-
-  const removeAppliance = (index: number) => {
-    if (appliances.length > 1) {
-      const updatedAppliances = appliances.filter((_, i) => i !== index);
-      setAppliances(updatedAppliances);
-      updateFormData({ appliances: updatedAppliances });
-    }
-  };
 
   const validateForm = () => {
     const newErrors: {
@@ -105,7 +39,7 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
     }
     
     // Check if at least one appliance has complete information
-    const hasCompleteAppliance = appliances.some(app => 
+    const hasCompleteAppliance = formData.appliances.some(app => 
       app.name && app.quantity > 0 && app.power > 0 && app.hoursUsed > 0
     );
     
@@ -139,225 +73,37 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
 
       <div className="space-y-6">
         {/* Grid Supply Hours section */}
-        <div>
-          <Label>Daily Grid Supply Hours</Label>
-          <RadioGroup
-            value={formData.gridSupplyHours || ''}
-            onValueChange={(value) => updateFormData({ gridSupplyHours: value })}
-            className="flex flex-col space-y-2 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="20+" id="hours-20" />
-              <Label htmlFor="hours-20" className="cursor-pointer">20+ hours/day (Band A: ₦219.70–₦241.45/kWh)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="16-20" id="hours-16-20" />
-              <Label htmlFor="hours-16-20" className="cursor-pointer">16–20 hours/day (Band B: ₦180.77–₦203/kWh)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="12-16" id="hours-12-16" />
-              <Label htmlFor="hours-12-16" className="cursor-pointer">12–16 hours/day (Band C: ₦145–₦205/kWh)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="<12" id="hours-less-12" />
-              <Label htmlFor="hours-less-12" className="cursor-pointer">{'<'}12 hours/day (Band D/E: ~₦174.67/kWh)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="not-sure" id="hours-not-sure" />
-              <Label htmlFor="hours-not-sure" className="cursor-pointer">Not sure</Label>
-            </div>
-          </RadioGroup>
-          {errors.gridSupplyHours && <p className="text-red-500 text-sm mt-1">{errors.gridSupplyHours}</p>}
-        </div>
+        <GridSupplySection 
+          formData={formData}
+          updateFormData={updateFormData}
+          error={errors.gridSupplyHours}
+        />
 
         {/* Tariff Rate section */}
-        <div>
-          <Label htmlFor="tariffRate">Current Tariff Rate (if known)</Label>
-          <div className="flex gap-2 items-center mt-1">
-            <span className="text-gray-500">₦</span>
-            <Input
-              id="tariffRate"
-              placeholder="e.g., 225"
-              value={formData.tariffRate || ''}
-              onChange={(e) => updateFormData({ tariffRate: e.target.value })}
-            />
-            <span className="text-gray-500">/kWh</span>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">Optional: Leave blank if unknown</p>
-        </div>
+        <TariffRateSection 
+          formData={formData}
+          updateFormData={updateFormData}
+        />
 
         {/* Monthly Bill section */}
-        <div>
-          <Label>Average Monthly Grid Bill</Label>
-          <RadioGroup
-            value={formData.monthlyBill || ''}
-            onValueChange={(value) => updateFormData({ monthlyBill: value })}
-            className="flex flex-col space-y-2 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="0-20k" id="bill-0-20k" />
-              <Label htmlFor="bill-0-20k" className="cursor-pointer">₦0–₦20k</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="20k-50k" id="bill-20k-50k" />
-              <Label htmlFor="bill-20k-50k" className="cursor-pointer">₦20k–₦50k</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="50k-100k" id="bill-50k-100k" />
-              <Label htmlFor="bill-50k-100k" className="cursor-pointer">₦50k–₦100k</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="100k+" id="bill-100k" />
-              <Label htmlFor="bill-100k" className="cursor-pointer">₦100k+</Label>
-            </div>
-          </RadioGroup>
-          {errors.monthlyBill && <p className="text-red-500 text-sm mt-1">{errors.monthlyBill}</p>}
-        </div>
+        <MonthlyBillSection 
+          formData={formData}
+          updateFormData={updateFormData}
+          error={errors.monthlyBill}
+        />
 
-        {/* Exact Monthly Usage field - new */}
-        <div>
-          <Label htmlFor="exactMonthlyUsage">Exact Monthly kWh Usage (if known)</Label>
-          <div className="flex gap-2 items-center mt-1">
-            <Input
-              id="exactMonthlyUsage"
-              placeholder="e.g., 450"
-              value={formData.exactMonthlyUsage || ''}
-              onChange={(e) => updateFormData({ exactMonthlyUsage: e.target.value })}
-            />
-            <span className="text-gray-500">kWh</span>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">Optional: Leave blank if unknown</p>
-        </div>
+        {/* Exact Monthly Usage field */}
+        <MonthlyUsageSection 
+          formData={formData}
+          updateFormData={updateFormData}
+        />
 
         {/* Appliance List section */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <Label>Appliance List (Critical for Load Calculation)</Label>
-            <Button 
-              type="button" 
-              onClick={addAppliance} 
-              variant="outline"
-              size="sm"
-              className="text-solar-blue hover:text-solar-blue-dark border-solar-blue hover:border-solar-blue-dark"
-            >
-              Add Appliance
-            </Button>
-          </div>
-          
-          <div className="space-y-4">
-            {appliances.map((appliance, index) => (
-              <div key={index} className="grid grid-cols-12 gap-2 items-center bg-gray-50 p-3 rounded-md">
-                <div className="col-span-12 sm:col-span-3">
-                  <Label htmlFor={`appliance-name-${index}`} className="sr-only">Appliance Name</Label>
-                  <Select
-                    value={appliance.name}
-                    onValueChange={(value) => handleApplianceChange(index, 'name', value)}
-                  >
-                    <SelectTrigger id={`appliance-name-${index}`}>
-                      <SelectValue placeholder="Select appliance" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="AC">Air Conditioner (1500W)</SelectItem>
-                      <SelectItem value="Fridge">Refrigerator (300W)</SelectItem>
-                      <SelectItem value="TV">Television (150W)</SelectItem>
-                      <SelectItem value="LED Bulb">LED Bulb (10W)</SelectItem>
-                      <SelectItem value="Fan">Fan (80W)</SelectItem>
-                      <SelectItem value="Microwave">Microwave (1200W)</SelectItem>
-                      <SelectItem value="Water Pump">Water Pump (750W)</SelectItem>
-                      <SelectItem value="Computer">Computer (200W)</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="col-span-3 sm:col-span-1">
-                  <Label htmlFor={`appliance-qty-${index}`} className="sr-only">Quantity</Label>
-                  <Input
-                    id={`appliance-qty-${index}`}
-                    type="number"
-                    min="1"
-                    placeholder="Qty"
-                    value={appliance.quantity || ''}
-                    onChange={(e) => handleApplianceChange(index, 'quantity', e.target.value)}
-                  />
-                </div>
-                <div className="col-span-3 sm:col-span-2">
-                  <Label htmlFor={`appliance-power-${index}`} className="sr-only">Power (Watts)</Label>
-                  <Input
-                    id={`appliance-power-${index}`}
-                    type="number"
-                    min="0"
-                    placeholder="Watts"
-                    value={appliance.power || ''}
-                    onChange={(e) => handleApplianceChange(index, 'power', e.target.value)}
-                    className={appliance.name ? "bg-gray-100" : ""}
-                    readOnly={!!appliance.name && appliance.name !== 'Other'}
-                  />
-                </div>
-                <div className="col-span-3 sm:col-span-2">
-                  <Label htmlFor={`appliance-peakPower-${index}`} className="sr-only">Peak Power</Label>
-                  <Input
-                    id={`appliance-peakPower-${index}`}
-                    type="number"
-                    min="0"
-                    placeholder="Peak W"
-                    value={appliance.peakPower || ''}
-                    onChange={(e) => handleApplianceChange(index, 'peakPower', e.target.value)}
-                    className={appliance.name && appliance.name !== 'Other' ? "bg-gray-100" : ""}
-                    readOnly={!!appliance.name && appliance.name !== 'Other'}
-                  />
-                </div>
-                <div className="col-span-3 sm:col-span-1">
-                  <Label htmlFor={`appliance-hours-${index}`} className="sr-only">Hours Used Daily</Label>
-                  <Input
-                    id={`appliance-hours-${index}`}
-                    type="number"
-                    min="0"
-                    max="24"
-                    placeholder="Hours"
-                    value={appliance.hoursUsed || ''}
-                    onChange={(e) => handleApplianceChange(index, 'hoursUsed', e.target.value)}
-                  />
-                </div>
-                <div className="col-span-6 sm:col-span-2">
-                  <Label htmlFor={`appliance-usage-${index}`} className="sr-only">Usage Timing</Label>
-                  <Select
-                    value={appliance.usageTiming || ''}
-                    onValueChange={(value) => {
-                      const updatedAppliances = [...appliances];
-                      updatedAppliances[index].usageTiming = value;
-                      setAppliances(updatedAppliances);
-                      updateFormData({ appliances: updatedAppliances });
-                    }}
-                  >
-                    <SelectTrigger id={`appliance-usage-${index}`}>
-                      <SelectValue placeholder="Usage time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="day">Daytime</SelectItem>
-                      <SelectItem value="night">Nighttime</SelectItem>
-                      <SelectItem value="both">Both</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {appliances.length > 1 && (
-                  <Button 
-                    type="button" 
-                    onClick={() => removeAppliance(index)} 
-                    variant="ghost" 
-                    size="sm"
-                    className="col-span-12 sm:col-span-1 text-red-500 hover:text-red-700 hover:bg-red-50 p-2"
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-          {errors.appliances && <p className="text-red-500 text-sm mt-2">{errors.appliances}</p>}
-          <p className="text-sm text-gray-500 mt-2">
-            Tip: Peak power is important for motor-driven appliances like ACs, refrigerators, and pumps that require 2-3x their rated power during startup.
-          </p>
-        </div>
+        <ApplianceListSection 
+          formData={formData}
+          updateFormData={updateFormData}
+          error={errors.appliances}
+        />
       </div>
 
       <div className="pt-4 flex justify-between">
