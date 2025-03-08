@@ -1,7 +1,7 @@
 
 import { Calendar, ClipboardList, Home, Sun, User, Settings } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -49,6 +49,7 @@ const items: NavItem[] = [
 
 export function AppSidebar() {
   const { expanded } = useSidebar();
+  const location = useLocation();
   
   return (
     <Sidebar>
@@ -68,19 +69,18 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = window.location.pathname === item.url;
+                const isActive = location.pathname === item.url;
                 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link 
-                        to={item.url}
-                        className={isActive ? "bg-sidebar-accent" : ""}
+                    <Link to={item.url}>
+                      <SidebarMenuButton 
+                        className={isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
                       >
                         {item.icon && <item.icon className="h-5 w-5" />}
                         <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                      </SidebarMenuButton>
+                    </Link>
                   </SidebarMenuItem>
                 );
               })}
