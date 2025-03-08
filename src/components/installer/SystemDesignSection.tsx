@@ -40,9 +40,9 @@ export const SystemDesignSection = ({
       // Recalculate total price for this component
       updatedComponents[index].totalPrice = 
         updatedComponents[index].quantity * updatedComponents[index].unitPrice;
-    } else {
-      // Handle string fields (type, brandModel)
-      updatedComponents[index][field] = value as string;
+    } else if (field === 'brandModel' || field === 'type') {
+      // Explicitly handle string fields by casting
+      updatedComponents[index][field as 'brandModel' | 'type'] = value as string;
     }
     
     setComponents(updatedComponents);
