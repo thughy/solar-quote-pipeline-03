@@ -12,6 +12,8 @@ import HowItWorks from "./pages/HowItWorks";
 import Quote from "./pages/Quote";
 import InstallerQuote from "./pages/InstallerQuote";
 import Layout from "./components/Layout";
+import AppLayout from "./layouts/app-layout";
+import InstallerDashboard from "./pages/InstallerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -28,8 +30,24 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/quote" element={<Quote />} />
-            <Route path="/installer-quote" element={<InstallerQuote />} />
           </Route>
+          
+          {/* Installer Dashboard Routes */}
+          <Route path="/installer-dashboard" element={
+            <AppLayout breadcrumbs={[{ title: "Dashboard", href: "/installer-dashboard" }]}>
+              <InstallerDashboard />
+            </AppLayout>
+          } />
+          
+          <Route path="/installer-quote" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/installer-dashboard" },
+              { title: "Quote Submission", href: "/installer-quote" }
+            ]}>
+              <InstallerQuote />
+            </AppLayout>
+          } />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

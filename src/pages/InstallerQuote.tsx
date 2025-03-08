@@ -25,13 +25,13 @@ const InstallerQuote = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto px-4 py-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-solar-blue">
+        <h1 className="text-3xl font-bold mb-6 text-solar-blue">
           Solar Installer Quote Submission
         </h1>
         
-        <Card className="mt-8">
+        <Card>
           <CardContent className="pt-6">
             {!isSubmitted ? (
               <InstallerForm 
