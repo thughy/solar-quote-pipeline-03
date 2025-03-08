@@ -28,7 +28,7 @@ export const SystemDesignSection = ({
       components, 
       totalSystemCost: totalCost 
     });
-  }, [components]);
+  }, [components, updateFormData]);
 
   const handleComponentChange = (index: number, field: keyof Component, value: string | number) => {
     const updatedComponents = [...components];
@@ -180,7 +180,7 @@ export const SystemDesignSection = ({
             </tfoot>
           </table>
         </div>
-        {errors.components && <p className="text-red-500 text-sm mt-2">{errors.components}</p>}
+        {errors.components && <p className="text-red-500 text-sm mt-1">{errors.components}</p>}
       </div>
     </div>
   );
