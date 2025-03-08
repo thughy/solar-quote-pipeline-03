@@ -22,7 +22,12 @@ export const SystemDesignSection = ({
 
   useEffect(() => {
     // Update the formData whenever components change
-    updateFormData({ components, totalSystemCost: calculateTotalCost() });
+    // Ensure we pass totalSystemCost as a number, not a string
+    const totalCost = calculateTotalCost();
+    updateFormData({ 
+      components, 
+      totalSystemCost: totalCost 
+    });
   }, [components]);
 
   const handleComponentChange = (index: number, field: keyof Component, value: string | number) => {
