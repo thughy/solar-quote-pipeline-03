@@ -118,7 +118,7 @@ function SidebarTrigger({ className, ...props }: SidebarTriggerProps) {
           size="sm"
           pressed={expanded}
           onPressedChange={toggle}
-          variant="ghost"
+          variant="default"
           className={cn("size-8 p-0", className)}
           {...props}
         >
