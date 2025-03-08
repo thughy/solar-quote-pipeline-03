@@ -4,7 +4,7 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { BreadcrumbItem } from '@/types/navigation';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 export default function AppSidebarLayout({ 
@@ -15,7 +15,7 @@ export default function AppSidebarLayout({
     breadcrumbs?: BreadcrumbItem[] 
 }) {
     return (
-        <SidebarProvider>
+        <SidebarProvider defaultExpanded={true}>
             <div className="min-h-screen flex w-full">
                 <AppShell variant="sidebar">
                     <AppSidebar />

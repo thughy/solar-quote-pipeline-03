@@ -48,6 +48,42 @@ const App = () => (
             </AppLayout>
           } />
           
+          <Route path="/calendar" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/installer-dashboard" },
+              { title: "Calendar", href: "/calendar" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">Calendar</h1>
+                <p>Calendar feature coming soon.</p>
+              </div>
+            </AppLayout>
+          } />
+          
+          <Route path="/customers" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/installer-dashboard" },
+              { title: "Customers", href: "/customers" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">Customer Management</h1>
+                <p>Customer management feature coming soon.</p>
+              </div>
+            </AppLayout>
+          } />
+          
+          <Route path="/settings" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/installer-dashboard" },
+              { title: "Settings", href: "/settings" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">Settings</h1>
+                <p>Settings feature coming soon.</p>
+              </div>
+            </AppLayout>
+          } />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
