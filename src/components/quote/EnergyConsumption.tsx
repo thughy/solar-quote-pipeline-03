@@ -55,15 +55,20 @@ const EnergyConsumption = ({ formData, updateFormData, nextStep, prevStep }: Ene
       
       // Automatically set the power value based on the selected appliance
       if (value in appliancePowerMap) {
-        updatedAppliances[index].power = appliancePowerMap[value as string];
+        const applianceName = value as string;
+        updatedAppliances[index].power = appliancePowerMap[applianceName];
         
         // Calculate and set peak power for motor-driven appliances
-        if (value in peakPowerMultiplier) {
-          updatedAppliances[index].peakPower = appliancePowerMap[value as string] * peakPowerMultiplier[value as string];
+        if (applianceName in peakPowerMultiplier) {
+          updatedAppliances[index].peakPower = appliancePowerMap[applianceName] * peakPowerMultiplier[applianceName];
         }
       }
-    } else {
+    } else if (field === 'quantity' || field === 'power' || field === 'hoursUsed' || field === 'peakPower') {
+      // Explicitly cast these numeric fields
       updatedAppliances[index][field] = Number(value) || 0;
+    } else if (field === 'usageTiming') {
+      // Handle string field
+      updatedAppliances[index][field] = value as string;
     }
     
     setAppliances(updatedAppliances);
