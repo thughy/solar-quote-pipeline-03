@@ -2,10 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { FormEvent, useState } from "react";
-import { ArrowLeft, Check, Send } from "lucide-react";
+import { ArrowLeft, Check, Send, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { FormData } from "@/types/quote";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type SubmissionProps = {
   formData: FormData;
@@ -19,6 +20,7 @@ const Submission = ({ formData, prevStep, resetForm }: SubmissionProps) => {
   const [timeline, setTimeline] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const { toast } = useToast();
 
   // Calculate savings (simplified for demo)
@@ -79,7 +81,7 @@ const Submission = ({ formData, prevStep, resetForm }: SubmissionProps) => {
         description: "You'll receive 3 competitive quotes within 48 hours.",
       });
       
-      resetForm();
+      setIsSubmitted(true);
       setIsSubmitting(false);
     }, 1500);
   };
@@ -95,6 +97,16 @@ const Submission = ({ formData, prevStep, resetForm }: SubmissionProps) => {
           Review your information and submit your request for solar quotes.
         </p>
       </div>
+
+      {isSubmitted && (
+        <Alert className="bg-green-50 border-green-200">
+          <AlertCircle className="h-4 w-4 text-green-600" />
+          <AlertTitle className="text-green-800">Quote Request Successfully Submitted!</AlertTitle>
+          <AlertDescription className="text-green-700">
+            Your request has been sent to our network of verified installers. You'll receive 3 competitive quotes within 48 hours. Meanwhile, our team will review your energy requirements to ensure you get accurate recommendations.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="space-y-6">
         <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
@@ -130,72 +142,88 @@ const Submission = ({ formData, prevStep, resetForm }: SubmissionProps) => {
           </p>
         </div>
 
-        <div>
-          <Label htmlFor="timeline">Preferred Installation Timeline</Label>
-          <Input
-            id="timeline"
-            placeholder="e.g., Within 1 month, As soon as possible, etc."
-            value={timeline}
-            onChange={(e) => setTimeline(e.target.value)}
-            className="mt-1"
-          />
-        </div>
+        {!isSubmitted && (
+          <>
+            <div>
+              <Label htmlFor="timeline">Preferred Installation Timeline</Label>
+              <Input
+                id="timeline"
+                placeholder="e.g., Within 1 month, As soon as possible, etc."
+                value={timeline}
+                onChange={(e) => setTimeline(e.target.value)}
+                className="mt-1"
+              />
+            </div>
 
-        <div className="space-y-3">
-          <div className="flex items-start space-x-2">
-            <input
-              type="checkbox"
-              id="consent"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="rounded text-solar-blue focus:ring-solar-blue mt-1"
-            />
-            <Label htmlFor="consent" className="cursor-pointer">
-              I agree to a follow-up call/onsite visit for final assessment.
-            </Label>
-          </div>
-          
-          <div className="flex items-start space-x-2">
-            <input
-              type="checkbox"
-              id="share-data"
-              checked={shareData}
-              onChange={(e) => setShareData(e.target.checked)}
-              className="rounded text-solar-blue focus:ring-solar-blue mt-1"
-            />
-            <Label htmlFor="share-data" className="cursor-pointer">
-              I consent to SolarConnect sharing my data with verified installers.
-            </Label>
-          </div>
-          
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-        </div>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-2">
+                <input
+                  type="checkbox"
+                  id="consent"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="rounded text-primary focus:ring-primary mt-1"
+                />
+                <Label htmlFor="consent" className="cursor-pointer">
+                  I agree to a follow-up call/onsite visit for final assessment.
+                </Label>
+              </div>
+              
+              <div className="flex items-start space-x-2">
+                <input
+                  type="checkbox"
+                  id="share-data"
+                  checked={shareData}
+                  onChange={(e) => setShareData(e.target.checked)}
+                  className="rounded text-primary focus:ring-primary mt-1"
+                />
+                <Label htmlFor="share-data" className="cursor-pointer">
+                  I consent to SolarConnect sharing my data with verified installers.
+                </Label>
+              </div>
+              
+              {error && <p className="text-destructive text-sm">{error}</p>}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="pt-4 flex justify-between">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={prevStep}
-          className="border-solar-blue text-solar-blue hover:bg-solar-blue/10"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          <span>Previous</span>
-        </Button>
-        <Button 
-          type="submit" 
-          className="bg-solar-orange hover:bg-solar-orange-dark"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <span>Submitting...</span>
-          ) : (
-            <>
-              <Send className="h-4 w-4 mr-2" />
-              <span>Submit Quote Request</span>
-            </>
-          )}
-        </Button>
+        {!isSubmitted ? (
+          <>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={prevStep}
+              className="border-primary text-primary hover:bg-primary/10"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span>Previous</span>
+            </Button>
+            <Button 
+              type="submit" 
+              className="bg-solar-orange hover:bg-solar-orange-dark"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <span>Submitting...</span>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  <span>Submit Quote Request</span>
+                </>
+              )}
+            </Button>
+          </>
+        ) : (
+          <Button 
+            type="button" 
+            onClick={resetForm}
+            className="ml-auto"
+          >
+            <span>Submit Another Quote</span>
+          </Button>
+        )}
       </div>
     </form>
   );

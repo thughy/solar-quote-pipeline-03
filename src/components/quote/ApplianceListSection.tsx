@@ -98,14 +98,24 @@ export const ApplianceListSection = ({
         // Calculate and set peak power for motor-driven appliances
         if (applianceName in peakPowerMultiplier) {
           updatedAppliances[index].peakPower = appliancePowerMap[applianceName] * peakPowerMultiplier[applianceName];
+        } else {
+          updatedAppliances[index].peakPower = appliancePowerMap[applianceName];
         }
       }
-    } else if (field === 'quantity' || field === 'power' || field === 'hoursUsed' || field === 'peakPower') {
+    } else if (field === 'quantity' || field === 'power' || field === 'hoursUsed') {
       // Explicitly cast these numeric fields
       updatedAppliances[index][field] = Number(value) || 0;
-    } else if (field === 'usageTiming') {
-      // Handle string field
-      updatedAppliances[index][field] = value as string;
+      
+      // Recalculate peak power if power is manually changed
+      if (field === 'power' && updatedAppliances[index].name in peakPowerMultiplier) {
+        const applianceName = updatedAppliances[index].name;
+        updatedAppliances[index].peakPower = Number(value) * peakPowerMultiplier[applianceName];
+      } else if (field === 'power') {
+        updatedAppliances[index].peakPower = Number(value);
+      }
+    } else if (field === 'usageTiming' || field === 'peakPower') {
+      // Handle other fields
+      updatedAppliances[index][field] = value;
     }
     
     setAppliances(updatedAppliances);
@@ -135,7 +145,7 @@ export const ApplianceListSection = ({
           onClick={addAppliance} 
           variant="outline"
           size="sm"
-          className="text-solar-blue hover:text-solar-blue-dark border-solar-blue hover:border-solar-blue-dark"
+          className="text-primary hover:text-primary-foreground hover:bg-primary border-primary"
         >
           Add Appliance
         </Button>
@@ -153,8 +163,8 @@ export const ApplianceListSection = ({
           />
         ))}
       </div>
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-      <p className="text-sm text-gray-500 mt-2">
+      {error && <p className="text-destructive text-sm mt-2">{error}</p>}
+      <p className="text-sm text-muted-foreground mt-2">
         Tip: Peak power is important for motor-driven appliances like ACs, refrigerators, and pumps that require 2-3x their rated power during startup.
       </p>
     </div>

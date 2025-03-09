@@ -1,5 +1,5 @@
 
-import { Calendar, ClipboardList, Home, Sun, User, Settings } from "lucide-react";
+import { Calendar, ClipboardList, Home, User, Settings, Sun, UserCog } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -17,6 +17,7 @@ import {
   useSidebar
 } from "@/components/ui/sidebar";
 import { NavItem } from "@/types/navigation";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Menu items.
 const items: NavItem[] = [
@@ -41,6 +42,11 @@ const items: NavItem[] = [
     icon: User,
   },
   {
+    title: "Profile",
+    url: "/installer-edit-profile",
+    icon: UserCog,
+  },
+  {
     title: "Settings",
     url: "/settings",
     icon: Settings,
@@ -52,7 +58,7 @@ export function AppSidebar() {
   const location = useLocation();
   
   return (
-    <Sidebar>
+    <Sidebar className="border-r">
       <SidebarHeader className="flex h-14 items-center border-b px-4">
         <Link to="/" className="flex items-center gap-2">
           <AppLogoIcon className="h-6 w-6" />
@@ -73,14 +79,31 @@ export function AppSidebar() {
                 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <Link to={item.url}>
-                      <SidebarMenuButton 
-                        className={isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
-                      >
-                        {item.icon && <item.icon className="h-5 w-5" />}
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </Link>
+                    {expanded ? (
+                      <Link to={item.url}>
+                        <SidebarMenuButton 
+                          className={isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
+                        >
+                          {item.icon && <item.icon className="h-5 w-5" />}
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    ) : (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Link to={item.url}>
+                            <SidebarMenuButton 
+                              className={isActive ? "bg-sidebar-accent text-sidebar-accent-foreground justify-center" : "justify-center"}
+                            >
+                              {item.icon && <item.icon className="h-5 w-5" />}
+                            </SidebarMenuButton>
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          {item.title}
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
                   </SidebarMenuItem>
                 );
               })}

@@ -16,6 +16,7 @@ import AppLayout from "./layouts/app-layout";
 import InstallerDashboard from "./pages/InstallerDashboard";
 import Installers from "./pages/Installers";
 import InstallerProfile from "./pages/InstallerProfile";
+import InstallerEditProfile from "./pages/InstallerEditProfile";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,15 @@ const App = () => (
               { title: "Quote Submission", href: "/installer-quote" }
             ]}>
               <InstallerQuote />
+            </AppLayout>
+          } />
+          
+          <Route path="/installer-edit-profile" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/installer-dashboard" },
+              { title: "Edit Profile", href: "/installer-edit-profile" }
+            ]}>
+              <InstallerEditProfile />
             </AppLayout>
           } />
           
