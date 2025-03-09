@@ -1,172 +1,207 @@
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { Upload, UserCircle, Building, Phone, Mail, Globe, MapPin } from 'lucide-react';
 
-import { useState } from "react";
-import { Appliance, FormData } from "@/types/quote";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { ApplianceItem } from "./ApplianceItem";
+const InstallerEditProfile = () => {
+  const { toast } = useToast();
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  
+  const handleSave = () => {
+    toast({
+      title: "Profile updated",
+      description: "Your profile changes have been saved successfully.",
+    });
+  };
 
-// Define default power values for common appliances
-const appliancePowerMap: Record<string, number> = {
-  "AC_1HP": 900,
-  "AC_1.5HP": 1119,
-  "AC_2HP": 1700,
-  "AC_3HP": 2700,
-  "Air_Fryer": 2000,
-  "Blender": 600,
-  "Fan_Ceiling": 85,
-  "Fan_Standing": 70,
-  "Fan_Standing_Large": 130,
-  "Deep_Freezer": 100,
-  "Computer": 200,
-  "Monitor": 60,
-  "Fridge": 100,
-  "Fridge_Energy": 60,
-  "Fridge_Mini": 80,
-  "Game_Console": 250,
-  "Hair_Dryer": 2000,
-  "Kettle": 2000,
-  "Laptop": 65,
-  "LED_TV": 100,
-  "TV": 300,
-  "Lightbulb": 60,
-  "Lightbulb_Energy": 15,
-  "Microwave": 1400,
-  "Phone": 10,
-  "POS": 35,
-  "Iron": 1200,
-  "Printer_Large": 500,
-  "Printer_Small": 300,
-  "Projector": 150,
-  "Speaker_Commercial": 200,
-  "Speaker_Home": 50,
-  "Toaster": 1400,
-  "Washing_Machine": 2100,
-  "CCTV": 300,
-  "Packaging_Machine": 380,
-  "Water_Dispenser": 1000,
-  "Fuel_Pump": 750,
-  "Other": 0
-};
-
-// Define peak power multipliers for motor-driven appliances
-const peakPowerMultiplier: Record<string, number> = {
-  "AC_1HP": 3,
-  "AC_1.5HP": 3,
-  "AC_2HP": 3,
-  "AC_3HP": 3,
-  "Fridge": 3,
-  "Fridge_Energy": 3,
-  "Fridge_Mini": 3,
-  "Deep_Freezer": 3,
-  "Washing_Machine": 3,
-  "Fuel_Pump": 3,
-  "Water_Dispenser": 2,
-  "Blender": 2,
-  "Fan_Ceiling": 2,
-  "Fan_Standing": 2,
-  "Fan_Standing_Large": 2,
-  "Packaging_Machine": 2,
-  "Other": 1
-};
-
-type ApplianceListSectionProps = {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  error?: string;
-};
-
-export const ApplianceListSection = ({ 
-  formData, 
-  updateFormData, 
-  error 
-}: ApplianceListSectionProps) => {
-  const [appliances, setAppliances] = useState<Appliance[]>(
-    formData.appliances?.length ? formData.appliances : [{ name: "", quantity: 1, power: 0, hoursUsed: 0 }]
-  );
-
-  const handleApplianceChange = (index: number, field: keyof Appliance, value: string | number) => {
-    const updatedAppliances = [...appliances];
-    
-    if (field === 'name') {
-      updatedAppliances[index][field] = value as string;
-      
-      // Automatically set the power value based on the selected appliance
-      if (value in appliancePowerMap) {
-        const applianceName = value as string;
-        updatedAppliances[index].power = appliancePowerMap[applianceName];
-        
-        // Calculate and set peak power for motor-driven appliances
-        if (applianceName in peakPowerMultiplier) {
-          updatedAppliances[index].peakPower = appliancePowerMap[applianceName] * peakPowerMultiplier[applianceName];
-        } else {
-          updatedAppliances[index].peakPower = appliancePowerMap[applianceName];
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target && typeof event.target.result === 'string') {
+          setProfileImage(event.target.result);
         }
-      }
-    } else if (field === 'quantity' || field === 'power' || field === 'hoursUsed') {
-      // Explicitly cast these numeric fields
-      updatedAppliances[index][field] = Number(value) || 0;
-      
-      // Recalculate peak power if power is manually changed
-      if (field === 'power' && updatedAppliances[index].name in peakPowerMultiplier) {
-        const applianceName = updatedAppliances[index].name;
-        updatedAppliances[index].peakPower = Number(value) * peakPowerMultiplier[applianceName];
-      } else if (field === 'power') {
-        updatedAppliances[index].peakPower = Number(value);
-      }
-    } else if (field === 'usageTiming' || field === 'peakPower') {
-      // Handle other fields
-      updatedAppliances[index][field] = value;
-    }
-    
-    setAppliances(updatedAppliances);
-    updateFormData({ appliances: updatedAppliances });
-  };
-
-  const addAppliance = () => {
-    const updatedAppliances = [...appliances, { name: "", quantity: 1, power: 0, hoursUsed: 0 }];
-    setAppliances(updatedAppliances);
-    updateFormData({ appliances: updatedAppliances });
-  };
-
-  const removeAppliance = (index: number) => {
-    if (appliances.length > 1) {
-      const updatedAppliances = appliances.filter((_, i) => i !== index);
-      setAppliances(updatedAppliances);
-      updateFormData({ appliances: updatedAppliances });
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
   };
-
+  
   return (
-    <div>
-      <div className="flex justify-between items-center mb-2">
-        <Label>Appliance List (Critical for Load Calculation)</Label>
-        <Button 
-          type="button" 
-          onClick={addAppliance} 
-          variant="outline"
-          size="sm"
-          className="text-primary hover:text-primary-foreground hover:bg-primary border-primary"
-        >
-          Add Appliance
-        </Button>
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold tracking-tight">Company Profile <span className="text-sm text-blue-600 font-normal">(edit)</span></h1>
+        <Button onClick={handleSave}>Save Changes</Button>
       </div>
       
-      <div className="space-y-4">
-        {appliances.map((appliance, index) => (
-          <ApplianceItem
-            key={index}
-            appliance={appliance}
-            index={index}
-            onChange={handleApplianceChange}
-            onRemove={removeAppliance}
-            canRemove={appliances.length > 1}
-          />
-        ))}
-      </div>
-      {error && <p className="text-destructive text-sm mt-2">{error}</p>}
-      <p className="text-sm text-muted-foreground mt-2">
-        Tip: Peak power is important for motor-driven appliances like ACs, refrigerators, and pumps that require 2-3x their rated power during startup.
+      <p className="text-muted-foreground">
+        [Provide company information so that potential customers can find you.]
       </p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Left column - 2/3 width */}
+        <div className="md:col-span-2 space-y-8">
+          {/* Company Info Section */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="companyName">Company Name</Label>
+                <Input id="companyName" defaultValue="SolarPro Solutions" />
+              </div>
+              <div>
+                <Label htmlFor="companyType">Company Type</Label>
+                <Input id="companyType" defaultValue="Solar Installer" />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input id="phoneNumber" defaultValue="+2348123456789" />
+              </div>
+              <div>
+                <Label htmlFor="emailAddress">Email Address</Label>
+                <Input id="emailAddress" defaultValue="info@solarpro.com" />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="website">Company Website</Label>
+              <Input id="website" defaultValue="solarpro.com" />
+            </div>
+          </div>
+          
+          {/* Company Location */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Location</h2>
+            <p className="text-sm text-muted-foreground">
+              This helps match you with nearby customers.
+            </p>
+            
+            <div>
+              <Label htmlFor="streetAddress">Street Address</Label>
+              <Input id="streetAddress" defaultValue="123 Solar Street, Lekki" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="country">Country</Label>
+                <Input id="country" defaultValue="Nigeria" />
+              </div>
+              <div>
+                <Label htmlFor="state">State</Label>
+                <Input id="state" defaultValue="Lagos" />
+              </div>
+            </div>
+          </div>
+          
+          {/* About Company */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">About Company</h2>
+            
+            <div>
+              <Label htmlFor="shortBio">Short Bio</Label>
+              <Textarea 
+                id="shortBio" 
+                placeholder="Brief description of your company (150 characters max)"
+                defaultValue="Leading solar installation company with over 10 years of experience in residential and commercial projects."
+                className="h-20"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="fullOverview">Full Company Overview</Label>
+              <Textarea 
+                id="fullOverview" 
+                placeholder="Comprehensive description of your company, services, history, etc."
+                defaultValue="SolarPro Solutions is a leading solar energy company in Nigeria dedicated to providing reliable, efficient, and sustainable solar power solutions. With over a decade of experience in the renewable energy sector, we specialize in designing, installing, and maintaining solar systems for residential, commercial, and industrial clients."
+                className="h-40"
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Right column - 1/3 width */}
+        <div className="space-y-6">
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <h2 className="text-lg font-medium mb-4">Company Logo/Profile Photo</h2>
+            
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-48 h-48 bg-gray-100 rounded-md overflow-hidden mb-4 flex items-center justify-center">
+                {profileImage ? (
+                  <img 
+                    src={profileImage} 
+                    alt="Company profile" 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : (
+                  <Building className="h-24 w-24 text-gray-400" />
+                )}
+              </div>
+              
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={() => document.getElementById('profile-upload')?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                Upload Logo
+              </Button>
+              <input
+                id="profile-upload"
+                type="file"
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+              
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Upload a company logo or profile photo.
+                <br />Recommended size: 300x300px
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <h2 className="text-lg font-medium mb-4">Company Statistics</h2>
+            <div className="space-y-3">
+              <div>
+                <Label className="text-sm text-muted-foreground">Years in Business</Label>
+                <p className="font-medium">10+</p>
+              </div>
+              <div>
+                <Label className="text-sm text-muted-foreground">Installations Completed</Label>
+                <p className="font-medium">500+</p>
+              </div>
+              <div>
+                <Label className="text-sm text-muted-foreground">Average Rating</Label>
+                <p className="font-medium">4.8/5</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Additional sections */}
+      <div className="pt-4 border-t">
+        <h2 className="text-xl font-semibold mb-4">Team Information</h2>
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="teamDescription">About Team</Label>
+            <Textarea 
+              id="teamDescription" 
+              placeholder="Brief text about your team, expertise, and experience"
+              defaultValue="Our team consists of certified solar technicians, engineers, and customer service professionals dedicated to delivering top-quality solar solutions."
+              className="h-28"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
+
+export default InstallerEditProfile;
