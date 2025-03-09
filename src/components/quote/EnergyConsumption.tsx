@@ -7,7 +7,7 @@ import { GridSupplySection } from "./GridSupplySection";
 import { TariffRateSection } from "./TariffRateSection";
 import { MonthlyBillSection } from "./MonthlyBillSection";
 import { MonthlyUsageSection } from "./MonthlyUsageSection";
-import { ApplianceListSection } from "./ApplianceListSection";
+import ApplianceListSection from "./ApplianceListSection";
 
 type EnergyConsumptionProps = {
   formData: FormData;
