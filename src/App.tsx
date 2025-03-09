@@ -14,6 +14,8 @@ import InstallerQuote from "./pages/InstallerQuote";
 import Layout from "./components/Layout";
 import AppLayout from "./layouts/app-layout";
 import InstallerDashboard from "./pages/InstallerDashboard";
+import Installers from "./pages/Installers";
+import InstallerProfile from "./pages/InstallerProfile";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,9 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/quote" element={<Quote />} />
+            <Route path="/installers" element={<Installers />} />
+            <Route path="/installer-profile" element={<InstallerProfile />} />
+            <Route path="/installer-profile/:id" element={<InstallerProfile />} />
           </Route>
           
           {/* Installer Dashboard Routes */}

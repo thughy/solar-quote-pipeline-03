@@ -7,23 +7,66 @@ import { ApplianceItem } from "./ApplianceItem";
 
 // Define default power values for common appliances
 const appliancePowerMap: Record<string, number> = {
-  "AC": 1500,
-  "Fridge": 300,
-  "TV": 150,
-  "LED Bulb": 10,
-  "Fan": 80,
-  "Microwave": 1200,
-  "Water Pump": 750,
+  "AC_1HP": 900,
+  "AC_1.5HP": 1119,
+  "AC_2HP": 1700,
+  "AC_3HP": 2700,
+  "Air_Fryer": 2000,
+  "Blender": 600,
+  "Fan_Ceiling": 85,
+  "Fan_Standing": 70,
+  "Fan_Standing_Large": 130,
+  "Deep_Freezer": 100,
   "Computer": 200,
+  "Monitor": 60,
+  "Fridge": 100,
+  "Fridge_Energy": 60,
+  "Fridge_Mini": 80,
+  "Game_Console": 250,
+  "Hair_Dryer": 2000,
+  "Kettle": 2000,
+  "Laptop": 65,
+  "LED_TV": 100,
+  "TV": 300,
+  "Lightbulb": 60,
+  "Lightbulb_Energy": 15,
+  "Microwave": 1400,
+  "Phone": 10,
+  "POS": 35,
+  "Iron": 1200,
+  "Printer_Large": 500,
+  "Printer_Small": 300,
+  "Projector": 150,
+  "Speaker_Commercial": 200,
+  "Speaker_Home": 50,
+  "Toaster": 1400,
+  "Washing_Machine": 2100,
+  "CCTV": 300,
+  "Packaging_Machine": 380,
+  "Water_Dispenser": 1000,
+  "Fuel_Pump": 750,
   "Other": 0
 };
 
 // Define peak power multipliers for motor-driven appliances
 const peakPowerMultiplier: Record<string, number> = {
-  "AC": 3, // AC compressor has high startup current
-  "Fridge": 3, // Fridge compressor has high startup current
-  "Water Pump": 3, // Water pumps have high startup current
-  "Other": 1 // Default no multiplier
+  "AC_1HP": 3,
+  "AC_1.5HP": 3,
+  "AC_2HP": 3,
+  "AC_3HP": 3,
+  "Fridge": 3,
+  "Fridge_Energy": 3,
+  "Fridge_Mini": 3,
+  "Deep_Freezer": 3,
+  "Washing_Machine": 3,
+  "Fuel_Pump": 3,
+  "Water_Dispenser": 2,
+  "Blender": 2,
+  "Fan_Ceiling": 2,
+  "Fan_Standing": 2,
+  "Fan_Standing_Large": 2,
+  "Packaging_Machine": 2,
+  "Other": 1
 };
 
 type ApplianceListSectionProps = {
