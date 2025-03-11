@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { InfoCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 type ProfileHeaderProps = {
   handleSave: () => void;
@@ -16,7 +16,7 @@ const ProfileHeader = ({ handleSave }: ProfileHeaderProps) => {
       </div>
       
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-md flex items-start gap-3">
-        <InfoCircle className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+        <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
         <div>
           <p className="text-blue-700">
             Complete your profile to appear in customer searches. More complete profiles rank higher.

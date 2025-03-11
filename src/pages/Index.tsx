@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sun, User, UserHardHat } from "lucide-react";
+import { Sun, User, UserCheck } from "lucide-react";
 
 export default function Index() {
   return (
@@ -71,7 +70,7 @@ export default function Index() {
               
               {/* Installer Dashboard Card */}
               <div className="flex flex-col items-center p-6 bg-green-50 rounded-lg border border-green-100">
-                <UserHardHat className="h-12 w-12 text-green-600 mb-4" />
+                <UserCheck className="h-12 w-12 text-green-600 mb-4" />
                 <h3 className="text-xl font-bold mb-2">Installer Dashboard</h3>
                 <p className="text-center mb-6 text-gray-600">
                   Manage quotes, installations, customers, and your company profile.
