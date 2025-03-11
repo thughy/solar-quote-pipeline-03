@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sun, Zap } from 'lucide-react';
+import { Sun, Zap, ShoppingCart, UserCircle } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
   
   const isActive = (path: string) => {
-    return location.pathname === path;
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   return (
@@ -19,24 +19,35 @@ const Navbar = () => {
             Solar<span className="text-solar-orange-dark">Connect</span>
           </span>
         </Link>
-        <div className="flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-6">
           <Link 
             to="/how-it-works" 
-            className={`text-solar-blue-dark hover:text-solar-blue transition-colors hidden md:block ${isActive('/how-it-works') ? 'font-medium text-solar-blue' : ''}`}
+            className={`text-solar-blue-dark hover:text-solar-blue transition-colors ${isActive('/how-it-works') ? 'font-medium text-solar-blue' : ''}`}
           >
             How It Works
           </Link>
           <Link 
+            to="/products" 
+            className={`text-solar-blue-dark hover:text-solar-blue transition-colors ${isActive('/products') ? 'font-medium text-solar-blue' : ''}`}
+          >
+            Products
+          </Link>
+          <Link 
+            to="/installers"
+            className={`text-solar-blue-dark hover:text-solar-blue transition-colors ${isActive('/installers') ? 'font-medium text-solar-blue' : ''}`}
+          >
+            Find Installers
+          </Link>
+          <Link 
             to="/about" 
-            className={`text-solar-blue-dark hover:text-solar-blue transition-colors hidden md:block ${isActive('/about') ? 'font-medium text-solar-blue' : ''}`}
+            className={`text-solar-blue-dark hover:text-solar-blue transition-colors ${isActive('/about') ? 'font-medium text-solar-blue' : ''}`}
           >
             About
           </Link>
-          <Link
-            to="/installers"
-            className={`text-solar-blue-dark hover:text-solar-blue transition-colors hidden md:block ${isActive('/installers') ? 'font-medium text-solar-blue' : ''}`}
-          >
-            Find Installers
+        </nav>
+        <div className="flex items-center gap-4">
+          <Link to="/customer-dashboard" className="text-solar-blue-dark hover:text-solar-blue transition-colors hidden md:block">
+            <UserCircle className="h-6 w-6" />
           </Link>
           <Link 
             to="/quote" 
@@ -44,6 +55,36 @@ const Navbar = () => {
           >
             <Zap className="h-4 w-4" />
             <span>Get Quotes</span>
+          </Link>
+        </div>
+      </div>
+      
+      {/* Mobile navigation drawer - could be implemented with a state and toggle button */}
+      <div className="md:hidden border-t border-gray-200 overflow-x-auto">
+        <div className="flex whitespace-nowrap">
+          <Link 
+            to="/how-it-works" 
+            className={`py-2 px-4 text-sm ${isActive('/how-it-works') ? 'text-solar-blue font-medium' : 'text-gray-600'}`}
+          >
+            How It Works
+          </Link>
+          <Link 
+            to="/products" 
+            className={`py-2 px-4 text-sm ${isActive('/products') ? 'text-solar-blue font-medium' : 'text-gray-600'}`}
+          >
+            Products
+          </Link>
+          <Link 
+            to="/installers"
+            className={`py-2 px-4 text-sm ${isActive('/installers') ? 'text-solar-blue font-medium' : 'text-gray-600'}`}
+          >
+            Installers
+          </Link>
+          <Link 
+            to="/about" 
+            className={`py-2 px-4 text-sm ${isActive('/about') ? 'text-solar-blue font-medium' : 'text-gray-600'}`}
+          >
+            About
           </Link>
         </div>
       </div>

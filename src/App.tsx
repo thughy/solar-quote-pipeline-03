@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,9 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import Installers from "./pages/Installers";
 import InstallerProfile from "./pages/InstallerProfile";
 import InstallerEditProfile from "./pages/InstallerEditProfile";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import WriteReview from "./pages/WriteReview";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +40,12 @@ const App = () => (
             <Route path="/installers" element={<Installers />} />
             <Route path="/installer-profile" element={<InstallerProfile />} />
             <Route path="/installer-profile/:id" element={<InstallerProfile />} />
+            
+            {/* New Product and Review Routes */}
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:productType" element={<Products />} />
+            <Route path="/products/:productType/:productId" element={<ProductDetails />} />
+            <Route path="/write-review/:productType/:productId" element={<WriteReview />} />
           </Route>
           
           {/* Installer Dashboard Routes */}
