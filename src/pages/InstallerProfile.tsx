@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin, Star, Calendar, Users, Building, Check, Phone, Mail, Globe, ChevronRight, ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';

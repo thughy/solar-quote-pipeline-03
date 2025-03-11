@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, MapPin, Star, Shield, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -138,139 +136,136 @@ const Installers: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <main className="flex-grow pt-28 pb-20">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-solar-blue to-blue-600 py-12 text-white">
-          <div className="container-tight relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-3xl md:text-4xl font-semibold mb-6">
-                Solar Company Directory
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                Find trusted solar installation companies across Nigeria
-              </p>
-              
-              {/* Search Box */}
-              <div className="relative max-w-xl mx-auto">
-                <div className="flex gap-2">
-                  <div className="relative flex-grow">
-                    <Input
-                      type="text"
-                      placeholder="Search for solar companies..."
-                      className="pl-10 py-6 text-gray-900 border-0 shadow-lg rounded-xl"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-                  </div>
-                  <Button size="lg" className="px-8 py-6 bg-white text-solar-blue hover:bg-gray-100">
-                    <Search size={20} className="mr-2" /> Search
-                  </Button>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-solar-blue to-blue-600 py-12 text-white">
+        <div className="container-tight relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-3xl md:text-4xl font-semibold mb-6">
+              Solar Company Directory
+            </h1>
+            <p className="text-xl text-white/90 mb-8">
+              Find trusted solar installation companies across Nigeria
+            </p>
+            
+            {/* Search Box */}
+            <div className="relative max-w-xl mx-auto">
+              <div className="flex gap-2">
+                <div className="relative flex-grow">
+                  <Input
+                    type="text"
+                    placeholder="Search for solar companies..."
+                    className="pl-10 py-6 text-gray-900 border-0 shadow-lg rounded-xl"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
                 </div>
+                <Button size="lg" className="px-8 py-6 bg-white text-solar-blue hover:bg-gray-100">
+                  <Search size={20} className="mr-2" /> Search
+                </Button>
               </div>
             </div>
           </div>
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-white/10 rounded-full blur-3xl"></div>
-        </section>
+        </div>
         
-        {/* Companies List Section */}
-        <section className="py-12">
-          <div className="container-wide">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Filters (sidebar) */}
-              <div className="lg:w-1/4">
-                <Card>
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center">
-                      <Filter size={18} className="mr-2" /> Filters
-                    </h3>
-                    
-                    <div className="space-y-6">
-                      {/* Primary Business Filter */}
-                      <div>
-                        <h4 className="text-sm font-medium mb-3">Primary Business:</h4>
-                        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                          {businessTypes.map((business) => (
-                            <label key={business} className="flex items-center space-x-2 cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
-                                checked={selectedBusinessType === business}
-                                onChange={() => setSelectedBusinessType(business === selectedBusinessType ? '' : business)}
-                              />
-                              <span className="text-sm">{business}</span>
-                            </label>
-                          ))}
-                        </div>
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-white/10 rounded-full blur-3xl"></div>
+      </section>
+      
+      {/* Companies List Section */}
+      <section className="py-12">
+        <div className="container-wide">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Filters (sidebar) */}
+            <div className="lg:w-1/4">
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <Filter size={18} className="mr-2" /> Filters
+                  </h3>
+                  
+                  <div className="space-y-6">
+                    {/* Primary Business Filter */}
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Primary Business:</h4>
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        {businessTypes.map((business) => (
+                          <label key={business} className="flex items-center space-x-2 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
+                              checked={selectedBusinessType === business}
+                              onChange={() => setSelectedBusinessType(business === selectedBusinessType ? '' : business)}
+                            />
+                            <span className="text-sm">{business}</span>
+                          </label>
+                        ))}
                       </div>
-                      
-                      {/* Location Filter */}
-                      <div>
-                        <h4 className="text-sm font-medium mb-3">Company Locations:</h4>
-                        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                          {nigerianStates.map((state) => (
-                            <label key={state} className="flex items-center space-x-2 cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
-                                checked={selectedState === state}
-                                onChange={() => setSelectedState(state === selectedState ? '' : state)}
-                              />
-                              <span className="text-sm">{state}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Technology Filter */}
-                      <div>
-                        <h4 className="text-sm font-medium mb-3">Technology:</h4>
-                        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                          {technologies.map((tech) => (
-                            <label key={tech} className="flex items-center space-x-2 cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
-                                checked={selectedTechnology === tech}
-                                onChange={() => setSelectedTechnology(tech === selectedTechnology ? '' : tech)}
-                              />
-                              <span className="text-sm">{tech}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <Button className="w-full">Apply Filters</Button>
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    {/* Location Filter */}
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Company Locations:</h4>
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        {nigerianStates.map((state) => (
+                          <label key={state} className="flex items-center space-x-2 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
+                              checked={selectedState === state}
+                              onChange={() => setSelectedState(state === selectedState ? '' : state)}
+                            />
+                            <span className="text-sm">{state}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Technology Filter */}
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Technology:</h4>
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        {technologies.map((tech) => (
+                          <label key={tech} className="flex items-center space-x-2 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="rounded text-solar-blue focus:ring-solar-blue h-4 w-4"
+                              checked={selectedTechnology === tech}
+                              onChange={() => setSelectedTechnology(tech === selectedTechnology ? '' : tech)}
+                            />
+                            <span className="text-sm">{tech}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full">Apply Filters</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Installers List */}
+            <div className="lg:w-3/4">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold">
+                  {filteredInstallers.length} Solar Companies
+                </h2>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600">Sort by:</span>
+                  <select className="border-gray-300 rounded-md text-sm">
+                    <option>Highest Rated</option>
+                    <option>Most Reviews</option>
+                    <option>A-Z</option>
+                  </select>
+                </div>
               </div>
               
-              {/* Installers List */}
-              <div className="lg:w-3/4">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">
-                    {filteredInstallers.length} Solar Companies
-                  </h2>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">Sort by:</span>
-                    <select className="border-gray-300 rounded-md text-sm">
-                      <option>Highest Rated</option>
-                      <option>Most Reviews</option>
-                      <option>A-Z</option>
-                    </select>
-                  </div>
-                </div>
-                
-                {/* Companies Cards */}
-                <div className="space-y-6">
-                  {filteredInstallers.map((installer) => (
-                    <Card key={installer.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              {/* Companies Cards */}
+              <div className="space-y-6">
+                {filteredInstallers.map((installer) => (
+                  <Card key={installer.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                       <CardContent className="p-0">
                         <div className="flex flex-col md:flex-row">
                           {/* Company Logo */}
@@ -335,33 +330,30 @@ const Installers: React.FC = () => {
                         </div>
                       </CardContent>
                     </Card>
+                ))}
+              </div>
+              
+              {/* Pagination */}
+              <div className="mt-10 flex justify-center">
+                <nav className="flex items-center space-x-2">
+                  <Button variant="outline" size="sm" disabled>Previous</Button>
+                  {[1, 2, 3, 4, 5].map((page) => (
+                    <Button 
+                      key={page} 
+                      variant={page === 1 ? "default" : "outline"} 
+                      size="sm"
+                      className="w-9 p-0"
+                    >
+                      {page}
+                    </Button>
                   ))}
-                </div>
-                
-                {/* Pagination */}
-                <div className="mt-10 flex justify-center">
-                  <nav className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm" disabled>Previous</Button>
-                    {[1, 2, 3, 4, 5].map((page) => (
-                      <Button 
-                        key={page} 
-                        variant={page === 1 ? "default" : "outline"} 
-                        size="sm"
-                        className="w-9 p-0"
-                      >
-                        {page}
-                      </Button>
-                    ))}
-                    <Button variant="outline" size="sm">Next</Button>
-                  </nav>
-                </div>
+                  <Button variant="outline" size="sm">Next</Button>
+                </nav>
               </div>
             </div>
           </div>
-        </section>
-      </main>
-      
-      <Footer />
+        </div>
+      </section>
     </div>
   );
 };

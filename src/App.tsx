@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import InstallerQuote from "./pages/InstallerQuote";
 import Layout from "./components/Layout";
 import AppLayout from "./layouts/app-layout";
 import InstallerDashboard from "./pages/InstallerDashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
 import Installers from "./pages/Installers";
 import InstallerProfile from "./pages/InstallerProfile";
 import InstallerEditProfile from "./pages/InstallerEditProfile";
@@ -63,6 +63,50 @@ const App = () => (
             </AppLayout>
           } />
           
+          {/* Customer Dashboard Routes */}
+          <Route path="/customer-dashboard" element={
+            <AppLayout breadcrumbs={[{ title: "Dashboard", href: "/customer-dashboard" }]}>
+              <CustomerDashboard />
+            </AppLayout>
+          } />
+          
+          <Route path="/customer-system" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/customer-dashboard" },
+              { title: "System Details", href: "/customer-system" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">System Details</h1>
+                <p>View detailed information about your solar system.</p>
+              </div>
+            </AppLayout>
+          } />
+          
+          <Route path="/customer-billing" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/customer-dashboard" },
+              { title: "Billing & Payments", href: "/customer-billing" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">Billing & Payments</h1>
+                <p>Manage your billing information and payment history.</p>
+              </div>
+            </AppLayout>
+          } />
+          
+          <Route path="/customer-support" element={
+            <AppLayout breadcrumbs={[
+              { title: "Dashboard", href: "/customer-dashboard" },
+              { title: "Support", href: "/customer-support" }
+            ]}>
+              <div className="container mx-auto p-8">
+                <h1 className="text-2xl font-bold mb-4">Support</h1>
+                <p>Get help with your solar system or service.</p>
+              </div>
+            </AppLayout>
+          } />
+          
+          {/* Existing Installer Routes */}
           <Route path="/calendar" element={
             <AppLayout breadcrumbs={[
               { title: "Dashboard", href: "/installer-dashboard" },
